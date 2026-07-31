@@ -1,205 +1,383 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Smart IV Fluid Calculator</title>
 
+
 <style>
 
 body {
-    font-family: Arial, sans-serif;
-    background: #f4f7fa;
-    margin: 0;
-    padding: 20px;
-    color: #17324d;
+
+font-family: Arial, sans-serif;
+
+background: #f4f7fa;
+
+margin: 0;
+
+padding: 20px;
+
+color: #17324d;
+
 }
+
 
 .container {
-    max-width: 520px;
-    margin: auto;
+
+max-width: 520px;
+
+margin: auto;
+
 }
+
 
 .card {
-    background: white;
-    padding: 25px;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+
+background: white;
+
+padding: 25px;
+
+border-radius: 15px;
+
+box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+
 }
+
 
 h1 {
-    text-align: center;
-    font-size: 24px;
-    margin-bottom: 5px;
+
+text-align: center;
+
+font-size: 24px;
+
+margin-bottom: 5px;
+
 }
+
 
 .subtitle {
-    text-align: center;
-    color: #666;
-    margin-bottom: 25px;
+
+text-align: center;
+
+color: #666;
+
+margin-bottom: 25px;
+
 }
+
 
 label {
-    display: block;
-    font-weight: bold;
-    margin-top: 15px;
-    margin-bottom: 6px;
+
+display: block;
+
+font-weight: bold;
+
+margin-top: 15px;
+
+margin-bottom: 6px;
+
 }
+
 
 input, select {
-    width: 100%;
-    padding: 12px;
-    box-sizing: border-box;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 16px;
+
+width: 100%;
+
+padding: 12px;
+
+box-sizing: border-box;
+
+border: 1px solid #ccc;
+
+border-radius: 8px;
+
+font-size: 16px;
+
 }
+
 
 .time-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 10px;
+
+display: grid;
+
+grid-template-columns: 1fr 1fr;
+
+gap: 10px;
+
 }
+
 
 button {
-    width: 100%;
-    padding: 13px;
-    margin-top: 20px;
-    border: none;
-    border-radius: 8px;
-    background: #2f6f95;
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
+
+width: 100%;
+
+padding: 14px;
+
+margin-top: 20px;
+
+border: none;
+
+border-radius: 8px;
+
+background: #2f6f95;
+
+color: white;
+
+font-size: 16px;
+
+font-weight: bold;
+
+cursor: pointer;
+
 }
+
+
+button:hover {
+
+opacity: 0.9;
+
+}
+
 
 .current-btn {
-    background: #607d8b;
-    margin-top: 10px;
+
+background: #607d8b;
+
+margin-top: 10px;
+
 }
+
 
 .reset {
-    background: #777;
+
+background: #777;
+
 }
+
 
 .results {
-    display: none;
-    margin-top: 25px;
-    border-top: 1px solid #ddd;
-    padding-top: 20px;
+
+display: none;
+
+margin-top: 25px;
+
+border-top: 1px solid #ddd;
+
+padding-top: 20px;
+
 }
+
 
 .result-box {
-    background: #f4f7fa;
-    padding: 12px;
-    margin: 10px 0;
-    border-radius: 8px;
+
+background: #f4f7fa;
+
+padding: 14px;
+
+margin: 10px 0;
+
+border-radius: 8px;
+
 }
+
 
 .result-title {
-    font-size: 13px;
-    color: #666;
+
+font-size: 13px;
+
+color: #666;
+
 }
+
 
 .result-value {
-    font-size: 19px;
-    font-weight: bold;
-    margin-top: 5px;
+
+font-size: 20px;
+
+font-weight: bold;
+
+margin-top: 5px;
+
 }
+
 
 .warning {
-    margin-top: 15px;
-    padding: 12px;
-    border-radius: 8px;
-    background: #fff3cd;
-    color: #856404;
-    display: none;
+
+margin-top: 15px;
+
+padding: 12px;
+
+border-radius: 8px;
+
+background: #fff3cd;
+
+color: #856404;
+
+display: none;
+
 }
+
 
 .success {
-    margin-top: 15px;
-    padding: 12px;
-    border-radius: 8px;
-    background: #d4edda;
-    color: #155724;
+
+margin-top: 15px;
+
+padding: 12px;
+
+border-radius: 8px;
+
+background: #d4edda;
+
+color: #155724;
+
 }
 
+
 .note {
-    font-size: 12px;
-    color: #666;
-    margin-top: 20px;
-    line-height: 1.5;
+
+font-size: 12px;
+
+color: #666;
+
+margin-top: 20px;
+
+line-height: 1.5;
+
 }
+
 
 </style>
 
 </head>
 
+
 <body>
+
 
 <div class="container">
 
+
 <div class="card">
 
-<h1>SMART IV FLUID CALCULATOR</h1>
+
+<h1>
+
+SMART IV FLUID CALCULATOR
+
+</h1>
+
 
 <div class="subtitle">
+
 IV Fluid Calculation Support Tool
+
 </div>
 
 
-<label>Ordered Volume (mL)</label>
+
+<label>
+
+Ordered Volume (mL)
+
+</label>
+
 
 <input
+
 type="number"
+
 id="orderedVolume"
+
 placeholder="Example: 1000"
+
 >
 
 
-<label>Infusion Rate (mL/hr)</label>
+
+<label>
+
+Infusion Rate (mL/hr)
+
+</label>
+
 
 <input
+
 type="number"
+
 id="infusionRate"
+
 placeholder="Example: 125"
+
 >
 
 
-<label>Start Time</label>
+
+<label>
+
+Start Time
+
+</label>
+
 
 <div class="time-row">
+
 
 <select id="startHour">
 
 <option value="">Hour</option>
 
 <option value="0">12 AM</option>
+
 <option value="1">1 AM</option>
+
 <option value="2">2 AM</option>
+
 <option value="3">3 AM</option>
+
 <option value="4">4 AM</option>
+
 <option value="5">5 AM</option>
+
 <option value="6">6 AM</option>
+
 <option value="7">7 AM</option>
+
 <option value="8">8 AM</option>
+
 <option value="9">9 AM</option>
+
 <option value="10">10 AM</option>
+
 <option value="11">11 AM</option>
 
 <option value="12">12 PM</option>
+
 <option value="13">1 PM</option>
+
 <option value="14">2 PM</option>
+
 <option value="15">3 PM</option>
+
 <option value="16">4 PM</option>
+
 <option value="17">5 PM</option>
+
 <option value="18">6 PM</option>
+
 <option value="19">7 PM</option>
+
 <option value="20">8 PM</option>
+
 <option value="21">9 PM</option>
+
 <option value="22">10 PM</option>
+
 <option value="23">11 PM</option>
 
 </select>
@@ -210,55 +388,96 @@ placeholder="Example: 125"
 <option value="">Minute</option>
 
 <option value="0">00</option>
+
 <option value="5">05</option>
+
 <option value="10">10</option>
+
 <option value="15">15</option>
+
 <option value="20">20</option>
+
 <option value="25">25</option>
+
 <option value="30">30</option>
+
 <option value="35">35</option>
+
 <option value="40">40</option>
+
 <option value="45">45</option>
+
 <option value="50">50</option>
+
 <option value="55">55</option>
 
 </select>
 
+
 </div>
 
 
-<label>Current Time</label>
+
+<label>
+
+Current Time
+
+</label>
+
 
 <div class="time-row">
+
 
 <select id="currentHour">
 
 <option value="">Hour</option>
 
 <option value="0">12 AM</option>
+
 <option value="1">1 AM</option>
+
 <option value="2">2 AM</option>
+
 <option value="3">3 AM</option>
+
 <option value="4">4 AM</option>
+
 <option value="5">5 AM</option>
+
 <option value="6">6 AM</option>
+
 <option value="7">7 AM</option>
+
 <option value="8">8 AM</option>
+
 <option value="9">9 AM</option>
+
 <option value="10">10 AM</option>
+
 <option value="11">11 AM</option>
 
 <option value="12">12 PM</option>
+
 <option value="13">1 PM</option>
+
 <option value="14">2 PM</option>
+
 <option value="15">3 PM</option>
+
 <option value="16">4 PM</option>
+
 <option value="17">5 PM</option>
+
 <option value="18">6 PM</option>
+
 <option value="19">7 PM</option>
+
 <option value="20">8 PM</option>
+
 <option value="21">9 PM</option>
+
 <option value="22">10 PM</option>
+
 <option value="23">11 PM</option>
 
 </select>
@@ -269,25 +488,40 @@ placeholder="Example: 125"
 <option value="">Minute</option>
 
 <option value="0">00</option>
+
 <option value="5">05</option>
+
 <option value="10">10</option>
+
 <option value="15">15</option>
+
 <option value="20">20</option>
+
 <option value="25">25</option>
+
 <option value="30">30</option>
+
 <option value="35">35</option>
+
 <option value="40">40</option>
+
 <option value="45">45</option>
+
 <option value="50">50</option>
+
 <option value="55">55</option>
 
 </select>
 
+
 </div>
 
 
+
 <button
-class="current-btn"
+
+type="button"
+
 onclick="useCurrentTime()">
 
 USE CURRENT TIME
@@ -295,24 +529,44 @@ USE CURRENT TIME
 </button>
 
 
-<label>Actual Volume Remaining (mL) - Optional</label>
+
+<label>
+
+Actual Volume Remaining (mL) - Optional
+
+</label>
+
 
 <input
+
 type="number"
+
 id="actualRemaining"
+
 placeholder="Example: 500"
+
 >
 
 
-<button onclick="calculateIV()">
+
+<button
+
+type="button"
+
+onclick="calculateIV()">
 
 CALCULATE
 
 </button>
 
 
+
 <button
+
+type="button"
+
 class="reset"
+
 onclick="resetCalculator()">
 
 RESET
@@ -320,12 +574,20 @@ RESET
 </button>
 
 
+
 <div
+
 class="results"
+
 id="results">
 
 
-<h2>Calculation Results</h2>
+<h2>
+
+Calculation Results
+
+</h2>
+
 
 
 <div class="result-box">
@@ -337,12 +599,17 @@ Elapsed Time
 </div>
 
 <div
+
 class="result-value"
+
 id="elapsedTime">
 
+-
+
 </div>
 
 </div>
+
 
 
 <div class="result-box">
@@ -354,12 +621,17 @@ Expected Delivered Volume
 </div>
 
 <div
+
 class="result-value"
+
 id="deliveredVolume">
 
+-
+
 </div>
 
 </div>
+
 
 
 <div class="result-box">
@@ -371,12 +643,17 @@ Expected Remaining Volume
 </div>
 
 <div
+
 class="result-value"
+
 id="remainingVolume">
 
+-
+
 </div>
 
 </div>
+
 
 
 <div class="result-box">
@@ -388,18 +665,27 @@ Expected Completion Time
 </div>
 
 <div
+
 class="result-value"
+
 id="completionTime">
 
+-
+
 </div>
 
 </div>
+
 
 
 <div
+
 class="result-box"
+
 id="differenceBox"
-style="display:none;">
+
+style="display:none">
+
 
 <div class="result-title">
 
@@ -407,16 +693,24 @@ Difference
 
 </div>
 
+
 <div
+
 class="result-value"
+
 id="difference">
 
-</div>
+-
 
 </div>
+
+
+</div>
+
 
 
 <div
+
 class="success">
 
 Calculation completed.
@@ -426,8 +720,11 @@ Please document the result on the IV Fluid Form.
 </div>
 
 
+
 <div
+
 class="warning"
+
 id="warningMessage">
 
 Please recheck the infusion rate, start time, IV line, and recorded volume.
@@ -436,6 +733,7 @@ Please recheck the infusion rate, start time, IV line, and recorded volume.
 
 
 </div>
+
 
 
 <div class="note">
@@ -447,7 +745,9 @@ This calculator is a supportive calculation tool and does not replace clinical j
 
 </div>
 
+
 </div>
+
 
 
 <script>
@@ -455,184 +755,341 @@ This calculator is a supportive calculation tool and does not replace clinical j
 
 function useCurrentTime() {
 
-let now = new Date();
 
-let hour = now.getHours();
+var now = new Date();
 
-let minute = Math.floor(now.getMinutes() / 5) * 5;
+
+var hour = now.getHours();
+
+
+var minute = Math.floor(now.getMinutes() / 5) * 5;
+
 
 document.getElementById("currentHour").value = hour;
 
+
 document.getElementById("currentMinute").value = minute;
 
+
 }
+
 
 
 function calculateIV() {
 
 
-let ordered =
-parseFloat(
+var ordered = parseFloat(
+
 document.getElementById("orderedVolume").value
+
 );
 
 
-let rate =
-parseFloat(
+var rate = parseFloat(
+
 document.getElementById("infusionRate").value
+
 );
 
 
-let startHour =
-document.getElementById("startHour").value;
+var startHour = parseInt(
+
+document.getElementById("startHour").value
+
+);
 
 
-let startMinute =
-document.getElementById("startMinute").value;
+var startMinute = parseInt(
+
+document.getElementById("startMinute").value
+
+);
 
 
-let currentHour =
-document.getElementById("currentHour").value;
+var currentHour = parseInt(
+
+document.getElementById("currentHour").value
+
+);
 
 
-let currentMinute =
-document.getElementById("currentMinute").value;
+var currentMinute = parseInt(
+
+document.getElementById("currentMinute").value
+
+);
 
 
-let actual =
-document.getElementById("actualRemaining").value;
+var actual = document.getElementById("actualRemaining").value;
+
 
 
 if (
+
 isNaN(ordered) ||
+
 isNaN(rate) ||
-startHour === "" ||
-startMinute === "" ||
-currentHour === "" ||
-currentMinute === ""
+
+isNaN(startHour) ||
+
+isNaN(startMinute) ||
+
+isNaN(currentHour) ||
+
+isNaN(currentMinute)
+
 ) {
 
+
 alert(
-"Please enter Ordered Volume, Infusion Rate, Start Time, and Current Time."
+
+"Please enter all required information."
+
 );
+
 
 return;
 
 }
 
 
-let startMinutes =
-parseInt(startHour) * 60 +
-parseInt(startMinute);
+
+var startTotal =
+
+(startHour * 60) +
+
+startMinute;
 
 
-let currentMinutes =
-parseInt(currentHour) * 60 +
-parseInt(currentMinute);
+
+var currentTotal =
+
+(currentHour * 60) +
+
+currentMinute;
 
 
-let elapsed =
-currentMinutes - startMinutes;
+
+var elapsedMinutes =
+
+currentTotal -
+
+startTotal;
 
 
-if (elapsed < 0) {
 
-elapsed += 1440;
+if (elapsedMinutes < 0) {
+
+
+elapsedMinutes =
+
+elapsedMinutes + 1440;
+
 
 }
 
 
-let elapsedHours =
-elapsed / 60;
+
+var elapsedHours =
+
+elapsedMinutes / 60;
 
 
-let delivered =
+
+var delivered =
+
 rate * elapsedHours;
+
 
 
 if (delivered > ordered) {
 
+
 delivered = ordered;
+
 
 }
 
 
-let remaining =
-ordered - delivered;
+
+var remaining =
+
+ordered -
+
+delivered;
 
 
-let completionMinutes =
-startMinutes +
-(ordered / rate) * 60;
+
+var completionTotal =
+
+startTotal +
+
+(ordered / rate * 60);
+
+
+
+completionTotal =
+
+completionTotal % 1440;
+
+
+
+var completionHour =
+
+Math.floor(completionTotal / 60);
+
+
+
+var completionMinute =
+
+Math.round(completionTotal % 60);
+
+
+
+if (completionMinute === 60) {
+
+
+completionMinute = 0;
+
+
+completionHour = completionHour + 1;
+
+
+}
+
+
+
+completionHour =
+
+completionHour % 24;
+
+
+
+var ampm =
+
+completionHour >= 12
+
+? "PM"
+
+: "AM";
+
+
+
+var displayHour =
+
+completionHour % 12;
+
+
+
+if (displayHour === 0) {
+
+
+displayHour = 12;
+
+
+}
+
 
 
 document.getElementById("elapsedTime").innerText =
 
-Math.floor(elapsed / 60) +
+Math.floor(elapsedMinutes / 60) +
+
 " hours " +
-Math.round(elapsed % 60) +
+
+(elapsedMinutes % 60) +
+
 " minutes";
+
 
 
 document.getElementById("deliveredVolume").innerText =
 
-Math.round(delivered * 10) / 10 +
+delivered.toFixed(1) +
+
 " mL";
+
 
 
 document.getElementById("remainingVolume").innerText =
 
-Math.round(remaining * 10) / 10 +
+remaining.toFixed(1) +
+
 " mL";
+
 
 
 document.getElementById("completionTime").innerText =
 
-formatTime(completionMinutes);
+displayHour +
+
+":" +
+
+String(completionMinute).padStart(2,"0") +
+
+" " +
+
+ampm;
+
 
 
 document.getElementById("results").style.display =
+
 "block";
 
 
+
 document.getElementById("differenceBox").style.display =
+
 "none";
+
 
 
 document.getElementById("warningMessage").style.display =
+
 "none";
+
 
 
 if (actual !== "") {
 
 
-let actualValue =
+var actualValue =
+
 parseFloat(actual);
 
 
-let difference =
-actualValue - remaining;
+var difference =
+
+actualValue -
+
+remaining;
+
 
 
 document.getElementById("differenceBox").style.display =
+
 "block";
+
 
 
 document.getElementById("difference").innerText =
 
 (difference >= 0 ? "+" : "") +
 
-Math.round(difference * 10) / 10 +
+difference.toFixed(1) +
 
 " mL";
 
 
+
 if (Math.abs(difference) > 10) {
 
+
 document.getElementById("warningMessage").style.display =
+
 "block";
 
-}
 
 }
 
@@ -640,90 +1097,42 @@ document.getElementById("warningMessage").style.display =
 }
 
 
-function formatTime(minutes) {
-
-
-minutes =
-minutes % 1440;
-
-
-let hours =
-Math.floor(minutes / 60);
-
-
-let mins =
-Math.round(minutes % 60);
-
-
-let ampm =
-hours >= 12
-? "PM"
-: "AM";
-
-
-let displayHour =
-hours % 12;
-
-
-if (displayHour === 0) {
-
-displayHour = 12;
-
 }
 
-
-return (
-
-displayHour +
-":" +
-String(mins).padStart(2, "0") +
-" " +
-ampm
-
-);
-
-}
 
 
 function resetCalculator() {
 
 
-document.getElementById("orderedVolume").value =
-"";
+document.getElementById("orderedVolume").value = "";
 
 
-document.getElementById("infusionRate").value =
-"";
+document.getElementById("infusionRate").value = "";
 
 
-document.getElementById("startHour").value =
-"";
+document.getElementById("startHour").value = "";
 
 
-document.getElementById("startMinute").value =
-"";
+document.getElementById("startMinute").value = "";
 
 
-document.getElementById("currentHour").value =
-"";
+document.getElementById("currentHour").value = "";
 
 
-document.getElementById("currentMinute").value =
-"";
+document.getElementById("currentMinute").value = "";
 
 
-document.getElementById("actualRemaining").value =
-"";
+document.getElementById("actualRemaining").value = "";
 
 
-document.getElementById("results").style.display =
-"none";
+document.getElementById("results").style.display = "none";
 
 
 }
 
 
 </script>
+
 
 </body>
 
