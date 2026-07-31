@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Smart IV Fluid Calculator</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f7fa;
+    margin: 0;
+    padding: 20px;
+    color: #17324d;
+}
+
+.container {
+    max-width: 500px;
+    margin: auto;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+h1 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #666;
+    margin-bottom: 25px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-top: 15px;
+    margin-bottom: 6px;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+button {
+    width: 100%;
+    padding: 13px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 8px;
+    background: #2f6f95;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.reset {
+    background: #777;
+}
+
+.results {
+    display: none;
+    margin-top: 25px;
+    border-top: 1px solid #ddd;
+    padding-top: 20px;
+}
+
+.result-box {
+    background: #f4f7fa;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 8px;
+}
+
+.result-title {
+    font-size: 13px;
+    color: #666;
+}
+
+.result-value {
+    font-size: 19px;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.warning {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 8px;
+    background: #fff3cd;
+    color: #856404;
+    display: none;
+}
+
+.success {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 8px;
+    background: #d4edda;
+    color: #155724;
+}
+
+.note {
+    font-size: 12px;
+    color: #666;
+    margin-top: 20px;
+    line-height: 1.5;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="card">
+
+<h1>SMART IV FLUID CALCULATOR</h1>
+
+<div class="subtitle">
+IV Fluid Calculation Support Tool
+</div>
+
+<label>Ordered Volume (mL)</label>
+<input type="number" id="orderedVolume" placeholder="Example: 1000">
+
+<label>Infusion Rate (mL/hr)</label>
+<input type="number" id="infusionRate" placeholder="Example: 125">
+
+<label>Start Time</label>
+<input type="time" id="startTime">
+
+<label>Current Time</label>
+<input type="time" id="currentTime">
+
+<label>Actual Volume Remaining (mL) - Optional</label>
+<input type="number" id="actualRemaining" placeholder="Example: 500">
+
+<button onclick="calculateIV()">CALCULATE</button>
+
+<button class="reset" onclick="resetCalculator()">RESET</button>
+
+<div class="results" id="results">
+
+<h2>Calculation Results</h2>
+
+<div class="result-box">
+<div class="result-title">Elapsed Time</div>
+<div class="result-value" id="elapsedTime"></div>
+</div>
+
+<div class="result-box">
+<div class="result-title">Expected Delivered Volume</div>
+<div class="result-value" id="deliveredVolume"></div>
+</div>
+
+<div class="result-box">
+<div class="result-title">Expected Remaining Volume</div>
+<div class="result-value" id="remainingVolume"></div>
+</div>
+
+<div class="result-box">
+<div class="result-title">Expected Completion Time</div>
+<div class="result-value" id="completionTime"></div>
+</div>
+
+<div class="result-box" id="differenceBox" style="display:none;">
+<div class="result-title">Difference</div>
+<div class="result-value" id="difference"></div>
+</div>
+
+<div class="success" id="successMessage">
+Calculation completed. Please document the result on the IV Fluid Form.
+</div>
+
+<div class="warning" id="warningMessage">
+Please recheck the infusion rate, start time, IV line, and recorded volume.
+</div>
+
+</div>
+
+<div class="note">
+This calculator is a supportive calculation tool and does not replace clinical judgment, physician orders, or hospital policy.
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+function timeToMinutes(time) {
+
+    let parts = time.split(":");
+
+    let hours = parseInt(parts[0]);
+
+    let minutes = parseInt(parts[1]);
+
+    return hours * 60 + minutes;
+
+}
+
+
+function formatTime(minutes) {
+
+    minutes = minutes % 1440;
+
+    let hours = Math.floor(minutes / 60);
+
+    let mins = Math.round(minutes % 60);
+
+    let ampm = hours >= 12 ? "PM" : "AM";
+
+    let displayHour = hours % 12;
+
+    if (displayHour === 0) {
+        displayHour = 12;
+    }
+
+    return displayHour + ":" +
+           String(mins).padStart(2, "0") +
+           " " + ampm;
+
+}
+
+
+function calculateIV() {
+
+    let ordered = parseFloat(
+        document.getElementById("orderedVolume").value
+    );
+
+    let rate = parseFloat(
+        document.getElementById("infusionRate").value
+    );
+
+    let start = document.getElementById("startTime").value;
+
+    let current = document.getElementById("currentTime").value;
+
+    let actual = document.getElementById("actualRemaining").value;
+
+
+    if (!ordered || !rate || !start || !current) {
+
+        alert("Please enter Ordered Volume, Infusion Rate, Start Time, and Current Time.");
+
+        return;
+
+    }
+
+
+    let startMinutes = timeToMinutes(start);
+
+    let currentMinutes = timeToMinutes(current);
+
+
+    let elapsed = currentMinutes - startMinutes;
+
+
+    if (elapsed < 0) {
+
+        elapsed += 1440;
+
+    }
+
+
+    let elapsedHours = elapsed / 60;
+
+
+    let delivered = rate * elapsedHours;
+
+
+    if (delivered > ordered) {
+
+        delivered = ordered;
+
+    }
+
+
+    let remaining = ordered - delivered;
+
+
+    let completionMinutes =
+        startMinutes + (ordered / rate) * 60;
+
+
+    document.getElementById("elapsedTime").innerText =
+
+        Math.floor(elapsed / 60) +
+        " hours " +
+        Math.round(elapsed % 60) +
+        " minutes";
+
+
+    document.getElementById("deliveredVolume").innerText =
+
+        Math.round(delivered * 10) / 10 +
+        " mL";
+
+
+    document.getElementById("remainingVolume").innerText =
+
+        Math.round(remaining * 10) / 10 +
+        " mL";
+
+
+    document.getElementById("completionTime").innerText =
+
+        formatTime(completionMinutes);
+
+
+    document.getElementById("results").style.display = "block";
+
+
+    document.getElementById("differenceBox").style.display = "none";
+
+    document.getElementById("warningMessage").style.display = "none";
+
+
+    if (actual !== "") {
+
+        let actualValue = parseFloat(actual);
+
+        let difference = actualValue - remaining;
+
+
+        document.getElementById("differenceBox").style.display = "block";
+
+
+        document.getElementById("difference").innerText =
+
+            (difference >= 0 ? "+" : "") +
+            Math.round(difference * 10) / 10 +
+            " mL";
+
+
+        if (Math.abs(difference) > 10) {
+
+            document.getElementById("warningMessage").style.display = "block";
+
+        }
+
+    }
+
+}
+
+
+function resetCalculator() {
+
+    document.getElementById("orderedVolume").value = "";
+
+    document.getElementById("infusionRate").value = "";
+
+    document.getElementById("startTime").value = "";
+
+    document.getElementById("currentTime").value = "";
+
+    document.getElementById("actualRemaining").value = "";
+
+    document.getElementById("results").style.display = "none";
+
+}
+
+</script>
+
+</body>
+</html>
