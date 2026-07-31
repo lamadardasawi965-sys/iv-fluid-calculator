@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Smart IV Fluid Calculator</title>
 
 <style>
@@ -57,7 +56,7 @@ input {
 button {
     width: 100%;
     padding: 14px;
-    margin-top: 20px;
+    margin-top: 15px;
     border: none;
     border-radius: 8px;
     background: #2f6f95;
@@ -137,10 +136,10 @@ button {
 IV Fluid Calculation Support Tool
 </div>
 
-<label>Ordered Volume (mL)</label>
+<label>Ordered Volume (mL) *</label>
 <input type="number" id="ordered" placeholder="Example: 1000">
 
-<label>Infusion Rate (mL/hr)</label>
+<label>Infusion Rate (mL/hr) *</label>
 <input type="number" id="rate" placeholder="Example: 125">
 
 <label>Start Date & Time</label>
@@ -149,18 +148,18 @@ IV Fluid Calculation Support Tool
 <label>Current Date & Time</label>
 <input type="datetime-local" id="current">
 
-<button class="current" onclick="setCurrentTime()">
+<button type="button" class="current" onclick="setCurrentTime()">
 USE CURRENT TIME
 </button>
 
 <label>Actual Volume Remaining (mL) - Optional</label>
 <input type="number" id="actual" placeholder="Example: 500">
 
-<button onclick="calculate()">
+<button type="button" onclick="calculate()">
 CALCULATE
 </button>
 
-<button class="reset" onclick="resetForm()">
+<button type="button" class="reset" onclick="resetForm()">
 RESET
 </button>
 
@@ -210,210 +209,96 @@ This calculator is a supportive calculation tool and does not replace clinical j
 </div>
 </div>
 
-
 <script>
-
 function setCurrentTime() {
-
     var now = new Date();
-
     var year = now.getFullYear();
-
     var month = String(now.getMonth() + 1).padStart(2, "0");
-
     var day = String(now.getDate()).padStart(2, "0");
-
     var hours = String(now.getHours()).padStart(2, "0");
-
     var minutes = String(now.getMinutes()).padStart(2, "0");
 
-    var value =
-        year + "-" +
-        month + "-" +
-        day + "T" +
-        hours + ":" +
-        minutes;
-
+    var value = year + "-" + month + "-" + day + "T" + hours + ":" + minutes;
     document.getElementById("current").value = value;
 }
 
-
 function calculate() {
+    var ordered = parseFloat(document.getElementById("ordered").value);
+    var rate = parseFloat(document.getElementById("rate").value);
+    var startValue = document.getElementById("start").value;
+    var currentValue = document.getElementById("current").value;
+    var actualValue = document.getElementById("actual").value;
 
-    var ordered =
-        parseFloat(document.getElementById("ordered").value);
-
-    var rate =
-        parseFloat(document.getElementById("rate").value);
-
-    var startValue =
-        document.getElementById("start").value;
-
-    var currentValue =
-        document.getElementById("current").value;
-
-    var actualValue =
-        document.getElementById("actual").value;
-
-
-    if (
-        isNaN(ordered) ||
-        isNaN(rate) ||
-        startValue === "" ||
-        currentValue === ""
-    ) {
-
-        alert(
-            "Please enter Ordered Volume, Infusion Rate, Start Date & Time, and Current Date & Time."
-        );
-
+    // التأكد من الحقول الأساسية
+    if (isNaN(ordered) || isNaN(rate)) {
+        alert("Please enter Ordered Volume and Infusion Rate.");
         return;
     }
-
 
     if (ordered <= 0 || rate <= 0) {
-
-        alert(
-            "Ordered Volume and Infusion Rate must be greater than zero."
-        );
-
+        alert("Ordered Volume and Infusion Rate must be greater than zero.");
         return;
     }
 
+    // إذا لم يحدد أوقات، نفترض التوقيت الحالي
+    var now = new Date();
+    var start = startValue ? new Date(startValue) : now;
+    var current = currentValue ? new Date(currentValue) : now;
 
-    var start =
-        new Date(startValue);
-
-    var current =
-        new Date(currentValue);
-
-
-    var elapsedMilliseconds =
-        current.getTime() - start.getTime();
-
+    var elapsedMilliseconds = current.getTime() - start.getTime();
 
     if (elapsedMilliseconds < 0) {
-
-        alert(
-            "Current Time cannot be earlier than Start Time."
-        );
-
+        alert("Current Time cannot be earlier than Start Time.");
         return;
     }
 
+    var elapsedMinutes = elapsedMilliseconds / 60000;
+    var elapsedHours = elapsedMinutes / 60;
 
-    var elapsedMinutes =
-        elapsedMilliseconds / 60000;
-
-
-    var elapsedHours =
-        elapsedMinutes / 60;
-
-
-    var delivered =
-        rate * elapsedHours;
-
-
+    var delivered = rate * elapsedHours;
     if (delivered > ordered) {
-
         delivered = ordered;
     }
 
+    var remaining = ordered - delivered;
 
-    var remaining =
-        ordered - delivered;
+    var completionMilliseconds = start.getTime() + (ordered / rate) * 60 * 60 * 1000;
+    var completion = new Date(completionMilliseconds);
 
+    var hours = Math.floor(elapsedMinutes / 60);
+    var minutes = Math.round(elapsedMinutes % 60);
 
-    var completionMilliseconds =
-        start.getTime() +
-        (ordered / rate) * 60 * 60 * 1000;
+    document.getElementById("elapsed").innerText = hours + " hours " + minutes + " minutes";
+    document.getElementById("delivered").innerText = delivered.toFixed(1) + " mL";
+    document.getElementById("remaining").innerText = remaining.toFixed(1) + " mL";
+    document.getElementById("completion").innerText = completion.toLocaleString();
 
-
-    var completion =
-        new Date(completionMilliseconds);
-
-
-    var hours =
-        Math.floor(elapsedMinutes / 60);
-
-    var minutes =
-        Math.round(elapsedMinutes % 60);
-
-
-    document.getElementById("elapsed").innerText =
-        hours + " hours " +
-        minutes + " minutes";
-
-
-    document.getElementById("delivered").innerText =
-        delivered.toFixed(1) + " mL";
-
-
-    document.getElementById("remaining").innerText =
-        remaining.toFixed(1) + " mL";
-
-
-    document.getElementById("completion").innerText =
-        completion.toLocaleString();
-
-
-    document.getElementById("results").style.display =
-        "block";
-
-
-    document.getElementById("differenceBox").style.display =
-        "none";
-
-
-    document.getElementById("warning").style.display =
-        "none";
-
+    document.getElementById("results").style.display = "block";
+    document.getElementById("differenceBox").style.display = "none";
+    document.getElementById("warning").style.display = "none";
 
     if (actualValue !== "") {
+        var actual = parseFloat(actualValue);
+        var difference = actual - remaining;
 
-        var actual =
-            parseFloat(actualValue);
-
-
-        var difference =
-            actual - remaining;
-
-
-        document.getElementById("differenceBox").style.display =
-            "block";
-
-
+        document.getElementById("differenceBox").style.display = "block";
         document.getElementById("difference").innerText =
-            (difference >= 0 ? "+" : "") +
-            difference.toFixed(1) +
-            " mL";
-
+            (difference >= 0 ? "+" : "") + difference.toFixed(1) + " mL";
 
         if (Math.abs(difference) > 10) {
-
-            document.getElementById("warning").style.display =
-                "block";
+            document.getElementById("warning").style.display = "block";
         }
     }
 }
 
-
 function resetForm() {
-
     document.getElementById("ordered").value = "";
-
     document.getElementById("rate").value = "";
-
     document.getElementById("start").value = "";
-
     document.getElementById("current").value = "";
-
     document.getElementById("actual").value = "";
-
-    document.getElementById("results").style.display =
-        "none";
+    document.getElementById("results").style.display = "none";
 }
-
 </script>
 
 </body>
